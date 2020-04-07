@@ -104,10 +104,10 @@
 				.attr('d', path)
 				.style('fill', d => color(fertilityById[d.id]))
 				.style('stroke', 'white')
-				.style('opacity', 0.8)
+				.style('opacity', 1)
 				.style('stroke-width', 0.3)
-				.on('mouseover',function(d){})
-				.on('mouseout', function(d){});
+				.on('mouseover', handleMouseOver)
+				.on('mouseout', handleMouseOut);
 
 		svg.append('path')
 				.datum(topojson.mesh(countries.features, (a, b) => a.id !== b.id))
@@ -164,8 +164,8 @@
             .attr("cx", xMap)
             .attr("cy", yMap)
             .style("fill", function(d) { return color(d[fieldColor]);})
-            .on("mouseover", function(d) {})
-            .on("mouseout", function(d) {});
+            .on('mouseover', handleMouseOver)
+            .on('mouseout', handleMouseOut);
 
         // draw legend
         var legend = scatterplot.append("g").attr("class", "legend-group").selectAll(".legend")
@@ -199,6 +199,25 @@
             .attr("dy", "1.5em")
             .style("text-anchor", "end")
             .text(fieldColor);
+
+        function handleMouseOver(d, i) {
+            var id = String(d.id);
+            var value = String(fertilityById[d.id]);
+            d3.select(this)
+                .style('fill', 'white')
+                .style("stroke", "black")
+                .style('stroke-width', 0.3)
+                .style("opacity", 1)
+                .append("title")
+                .text(id + " " + value);
+        }
+        function handleMouseOut(d, i) {
+            d3.select(this)
+                .style("stroke", "none")
+                .style("opacity", 1)
+            d3.select(this)
+                .style('fill', d => color(fertilityById[d.id]))
+        }
     });
 
 </script>
